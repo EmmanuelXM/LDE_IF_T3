@@ -34,30 +34,6 @@ public:
     Nodo *Obtieneant();
     int Obtienedato();
 };
-class LDE
-{    private:
-    Nodo *Inicio, *Fin;
-public:
-    void InsertarI(int);
-    void InsertarF(int);
-    void BorrarI();
-    void BorrarF();
-    void Imprimir();
-    void ImprimirR();
-    int Contar();
-    Nodo *Buscar(int);
-    void Borrar(int);
-    LDE()
-    {
-        Inicio=NULL;
-        Fin=NULL;
-        
-    }
-    
-};
-
-
-
 
 void Nodo::Asignasig(Nodo *x)
 {
@@ -67,8 +43,6 @@ void Nodo::Asignaant(Nodo *x)
 {
     this->ant=x;
 }
-
-
 void Nodo::Leer(int x)
 {
     this->dato=x;
@@ -86,16 +60,200 @@ Nodo* Nodo::Obtieneant()
 {
     return(this->ant);
 }
-
-
 int Nodo::Obtienedato()
 {
     return(this->dato);
 }
 
+class LDE
+{    private:
+    Nodo *Inicio, *Fin;
+public:
+    void InsertarI(int);
+    void InsertarF(int);
+    void BorrarI();
+    void BorrarF();
+    void Imprimir();
+    void ImprimirR();
+    int Contar();
+    Nodo *Buscar(int);
+    void Borrar(int);
+    LDE()
+    {
+        Inicio=NULL;
+        Fin=NULL;  
+    }
+};
+
+void LDE::InsertarI(int x)
+{
+    if(!Inicio)
+    {
+        Inicio=new Nodo(x);
+        Fin=Inicio;
+    }
+    
+    else
+    {
+        Nodo *helpx3=new Nodo(x);
+        helpx3->Asignasig(Inicio);
+        Inicio->Asignaant(helpx3);
+        Inicio=helpx3;
+    }
+}
+
+void LDE::InsertarF(int x)
+{
+    if(!Inicio)
+    {
+        Inicio=new Nodo(x);
+    }
+    
+    else
+    {
+        Nodo *helpx2=new Nodo(x);
+        Fin->Asignasig(helpx2);
+        helpx2->Asignaant(Fin);
+        Fin=helpx2;
+    }
+}
+
+void LDE::BorrarI()
+{
+    if(!Inicio)
+        cout<<"Lista Vacia"<<endl;
+    else
+    {
+        if(Inicio==Fin)
+        {
+            delete Inicio;
+            Fin=NULL;
+            Inicio=NULL;
+        }
+        else
+        {
+            Nodo *hay=Inicio;
+            Inicio=Inicio->Obtienesig();
+            hay->Asignasig(NULL);
+            Inicio->Asignaant(NULL);
+            delete hay;
+        }
+    }
+}
+void LDE::BorrarF()
+{    if(!Inicio)
+    cout<<"Lista Vacia";
+    else
+        {
+            if(Inicio==Fin)
+                {
+                    delete Inicio;
+                    Inicio=NULL;
+                    Fin=NULL;
+                }
+            else
+                {
+                    Nodo *Sh;
+                    Sh=Fin->Obtieneant();
+                    Sh->Asignasig(NULL);
+                    Fin->Asignaant(NULL);
+                    delete Fin;
+                    Fin=Sh;
+                }
+        }
+}
+
+
+void LDE::Imprimir()
+{
+    if(!Inicio)
+        cout<<"Lista Vacia"<<endl;
+    else
+    {
+        Nodo *Aux=Inicio;
+        while(Aux!=NULL)
+        {
+            Aux->Imprimir();
+            Aux=Aux->Obtienesig();
+        }
+    }
+}
 
 
 
+void LDE::ImprimirR()
+{
+    if(!Inicio)
+        cout<<"Lista Vacia"<<endl;
+    else
+    {
+        Nodo *Aux=Fin;
+        while(Aux!=NULL)
+        {
+            Aux->Imprimir();
+            Aux=Aux->Obtieneant();
+        }
+        
+    }
+}
+
+
+
+int LDE::Contar()
+{    int ESCA=0;
+    if(!Inicio)
+        ESCA=0;
+    else
+    {
+        Nodo *REC=Inicio;
+        while(REC!=NULL)
+        {
+            ESCA++;
+            REC=REC->Obtienesig();
+        }
+    }
+    return ESCA;
+}
+
+Nodo* LDE::Buscar(int x)
+{
+    Nodo *covid=Inicio;
+    if(Inicio)
+    {
+        while (covid!=NULL)
+        {
+            if (covid->Obtienedato()==x)
+                return covid;
+            covid=covid->Obtienesig();
+        }
+    }
+    return covid;
+}
+void LDE::Borrar(int x)
+{
+    Nodo *simi=Buscar(x);
+    if(simi==NULL)
+        cout<<"DATO NO ENCONTRADO";
+    else
+    {
+        if(simi==Inicio)
+            BorrarI();
+        else
+        {
+            if(simi==Fin)
+                BorrarF();
+            else
+            {
+                Nodo *XL=simi->Obtieneant();
+                XL->Asignasig(simi->Obtienesig());
+                simi->Obtienesig()->Asignaant(XL);
+                simi->Asignasig(NULL);
+                simi->Asignaant(NULL);
+                delete simi;
+            }
+        }
+    }
+}
 
 int main(int argc, const char * argv[])
 {
